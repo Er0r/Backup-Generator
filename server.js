@@ -12,7 +12,7 @@ app.set('view engine', 'ejs')
 
 const movie = `http://localhost:3000/`;
 
-(async () => {
+async function requestBackup(){
     let imdbData = [];
     const response = await request({
       uri: movie,
@@ -38,9 +38,7 @@ const movie = `http://localhost:3000/`;
     const j2cp = new json2csv();
     const csv = j2cp.parse(imdbData);
     fs.writeFileSync("./uploads/imdb.csv", csv, "utf-8");
-  }
-  
-)();
+}
 
 
 app.get('/', (req, res) => {
@@ -48,6 +46,10 @@ app.get('/', (req, res) => {
 })
 
 
+app.post("/backup", (req,res) => {
+  requestBackup();
+  res.render('index');
+})
 
 const results = [];
   
@@ -59,11 +61,6 @@ app.get('/create', (req,res) => {
   .on('end', () => {
     res.render('newFile', {data: results})
   });
- 
-  
-  
-  
-  
 })
 
 app.listen(3000, () => {
