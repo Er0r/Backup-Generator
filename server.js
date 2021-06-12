@@ -6,9 +6,13 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const csv = require('csv-parser');
+const http = require('http');
+const Downloader = require('nodejs-file-downloader');
+
 app.set('views', path.join(`${__dirname}`, 'views')) 
 app.set('view engine', 'ejs') 
 
+const results = [];
 
 const movie = `http://localhost:3000/`;
 
@@ -38,8 +42,16 @@ async function requestBackup(){
     const j2cp = new json2csv();
     const csv = j2cp.parse(imdbData);
     fs.writeFileSync("./uploads/imdb.csv", csv, "utf-8");
+    
 }
 
+const downloadResource = (res, fileName, data) => {
+  const j2cp = new json2csv();
+  const csv = j2cp.parse(data);
+  res.header('Content-Type', 'text/csv');
+  res.attachment(fileName);
+  return res.send(csv);
+}
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -51,15 +63,13 @@ app.post("/backup", (req,res) => {
   res.render('index');
 })
 
-const results = [];
-  
 
-app.get('/create', (req,res) => {
+app.post('/download', (req,res) => {
   fs.createReadStream('./uploads/imdb.csv')
   .pipe(csv())
   .on('data', (data) => results.push(data))
   .on('end', () => {
-    res.render('newFile', {data: results})
+    downloadResource(res, './uploads/imdb.csv', results);
   });
 })
 

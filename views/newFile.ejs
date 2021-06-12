@@ -10,7 +10,8 @@
 <title>Title</title>
 </head>
 <body>
-    <div class="card text-center">
+    <form action="POST" method="/download">
+      <div class="card text-center">
         <div class="card-header">
             <%= data[0]['upper'] %>
         </div>
@@ -22,7 +23,9 @@
         <div class="card-footer text-muted">
           2 days ago
         </div>
-    </div>
+      </div>
+      <button type="submit" class="btn btn-default pl-4 pr-4"> Download CSV Backup</button>
+    </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
